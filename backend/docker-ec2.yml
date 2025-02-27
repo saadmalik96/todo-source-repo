@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.4.4
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: saadmalik96/backend:latest
+    container_name: backend
+    restart: always
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_DATABASE: ${MYSQL_DATABASE}
+    expose:
+      - "3000"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    image: saadmalik96/frontend:latest
+    container_name: frontend
+    restart: always
+    expose:
+      - "80"
+
+  nginx:
+    image: saadmalik96/nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  mysql-data:
