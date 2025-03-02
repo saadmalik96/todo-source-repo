@@ -67,7 +67,7 @@ function App() {
 
   return (
     <div style={{ margin: "2rem" }}>
-      <h1>Todo List</h1>
+      <h1>My Todo List</h1>
       <input 
         type="text" 
         placeholder="New Task" 
