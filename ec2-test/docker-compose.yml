@@ -41,8 +41,6 @@ services:
     image: 010156732076.dkr.ecr.us-east-1.amazonaws.com/namespace/todo:nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - frontend
       - backend
